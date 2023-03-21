@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<title>Convert discord time</title>
+This tool converts timestamps like <code>2023-12-25T12:00Z</code>
+or <code>2023-12-25T14:00+02:00</code> to discord-compatible time tags.
+<br>
+<select id="format">
+  <option value="">Default: November 28, 2018 9:01 AM</option>
+  <option value=":t">Short Time: 9:01 AM</option>
+  <option value=":T">Long Time: 9:01 AM</option>
+  <option value=":d">Short Date: 11/28/2018</option>
+  <option value=":D">Long Date: November 28, 2018</option>
+  <option value=":f">Short Date/Time: November 28, 2018 9:01 AM</option>
+  <option value=":F">Long Date/Time: Wednesday, November 28, 2018 9:01 AM </option>
+  <option value=":R">Long Date: 3 years ago</option>
+</select>
+<button type="button" onclick="discord();">TIMESTAMP TO DISCORD</button>
+<button type="button" onclick="utc();">DISCORD TO UTC</button>
+<br>
+<textarea id="input" rows="24" cols="80">
+Xmas is at 2023-12-25T12:00:00Z this year.
+</textarea>
+<script>
+  const t = (str, format) => `<t:${Date.parse(str) / 1000}${format}>`;
+
+  function discord() {
+    const format = document.getElementById("format");
+    const input = document.getElementById("input");
+
+    input.value = input.value.replace(
+      /\d+-\d+-\d+T\d+\:\d+(?:\:\d+)?(?:\.\d+)?(Z|[-+]\d+(?:\:\d+)?)/g, (m) => t(m, format.value));
+  }
+
+
+  function utc() {
+    const format = document.getElementById("format");
+    const input = document.getElementById("input");
+
+    input.value = input.value.replace(
+      /<t:(\d+)(?:\:[a-zA-Z])?>/g, (_, time) => new Date(parseInt(time) * 1000).toISOString());
+  }
+</script>
